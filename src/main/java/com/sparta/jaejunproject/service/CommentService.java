@@ -7,6 +7,7 @@ import com.sparta.jaejunproject.model.Camp;
 import com.sparta.jaejunproject.repository.CampRepository;
 import com.sparta.jaejunproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 
+@Slf4j
 @RequiredArgsConstructor //final로 선언한 변수가 있으면 꼭 생성해달라는 것
 @Service
 public class CommentService {
@@ -30,8 +32,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         String memberName = campService.getNickname();
         Comment comment = new Comment(camp, memberName, commentRequestDto);
-        return commentRepository.save(comment); //DB 저장과 동시에 comment 돌려줘요
-//        camp.addComment(comment);
+        return commentRepository.save(comment);
     }
 
     @Transactional
@@ -41,7 +42,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
-        if(!campService.getNickname().equals(camp.getNickname())) {
+        if(!campService.getNickname().equals(comment.getMemberName())) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
         comment.setComment(commentRequestDto);
@@ -54,7 +55,7 @@ public class CommentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
-        if(!campService.getNickname().equals(camp.getNickname())) {
+        if(!campService.getNickname().equals(comment.getMemberName())) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
 

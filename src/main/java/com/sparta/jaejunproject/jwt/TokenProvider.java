@@ -103,6 +103,7 @@ public class TokenProvider {
       try {
          Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
          return true;
+
       } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
          throw new MalformedJwtException("잘못된 JWT 서명입니다.");
       } catch (UnsupportedJwtException e) {

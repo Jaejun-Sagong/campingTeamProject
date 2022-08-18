@@ -8,15 +8,18 @@ import com.sparta.jaejunproject.model.Member;
 import com.sparta.jaejunproject.repository.MemberRepository;
 import com.sparta.jaejunproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import javax.validation.Valid;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/member")
-@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -37,8 +40,8 @@ public class AuthController {
         response.setHeader("Access-Token-Expire-Time", String.valueOf(tokenDto.getAccessTokenExpiresIn()));
         Member member = memberRepository.findByUserId(memberRequestDto.getNickname()).get();
         return MemberResponseDto.of(member);
-
     }
+
     @PostMapping("/idCheck")
     public Boolean idCheck(@RequestBody MemberRequestDto memberRequestDto) {
         return authService.idCheck(memberRequestDto);
@@ -47,4 +50,10 @@ public class AuthController {
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
     }
+//    @DeleteMapping("/authenticate")
+//    public HttpStatus logout(
+//            @RequestBody @Valid TokenDto requestTokenDto) {
+//        authService.logout(requestTokenDto.getAccessToken(), requestTokenDto.getRefreshToken());
+//        return OK;
+//    }
 }

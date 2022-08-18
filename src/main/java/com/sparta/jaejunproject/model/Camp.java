@@ -31,9 +31,11 @@ public class Camp { // 생성,수정 시간을 자동으로 만들어줍니다.
     @Column(nullable = false)
     private String review;
     // 추가됨
-//    @Column
-//    private String urlPath;
-//    //
+    @Column
+    private String urlPath;
+    //
+    @Column
+    private String imgUrl;
     @Column
     private String nickname;
 

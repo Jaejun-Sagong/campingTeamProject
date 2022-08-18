@@ -2,6 +2,7 @@ package com.sparta.jaejunproject.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.sparta.jaejunproject.dto.CampRequestDto;
+import com.sparta.jaejunproject.dto.S3Dto;
 import com.sparta.jaejunproject.image.S3Uploader;
 import com.sparta.jaejunproject.model.Camp;
 import com.sparta.jaejunproject.model.DeletedUrlPath;
@@ -32,8 +33,8 @@ public class CampService {
     private final DeletedUrlPathRepository deletedUrlPathRepository;
     private final MemberRepository memberRepository;
 
-//    @Value("${cloud.aws.s3.bucket}")
-//    public String bucket;  // S3 버킷 이름
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;  // S3 버킷 이름
 
 
     public String getNickname() {
@@ -42,45 +43,46 @@ public class CampService {
         return member.get().getUserId();
     }
 
-//    @Transactional
-//    public Camp registerCamp(CampRequestDto requestDto, MultipartFile multipartFile) throws IOException {
-//        String nickname = getNickname();
-//        if (multipartFile != null) {
-//            String pathurl = s3Uploader.upload(multipartFile);
-//            Camp camp = Camp.builder()
-//                    .nickname(nickname)
-//                    .title(requestDto.getTitle())
-//                    .location(requestDto.getLocation())
-//                    .review(requestDto.getReview())
-//                    .urlPath(pathurl)
-//                    .build();
-//
-//            campRepository.save(camp);
-//
-//            return camp;
-//        }
-//        Camp camp = Camp.builder()
-//                    .nickname(nickname)
-//                .title(requestDto.getTitle())
-//                .location(requestDto.getLocation())
-//                .review(requestDto.getReview())
-//                .build();
-//        return campRepository.save(camp);
-//    }
-@Transactional
-public Camp registerCamp(CampRequestDto requestDto) throws IOException {
-    String nickname = getNickname();
+    @Transactional
+    public Camp registerCamp(CampRequestDto requestDto, MultipartFile multipartFile) throws IOException {
+        String nickname = getNickname();
+        if (multipartFile != null) {
+            S3Dto s3Dto = s3Uploader.upload(multipartFile);
+            Camp camp = Camp.builder()
+                    .nickname(nickname)
+                    .title(requestDto.getTitle())
+                    .location(requestDto.getLocation())
+                    .review(requestDto.getReview())
+                    .urlPath(s3Dto.getFileName())
+                    .imgUrl(s3Dto.getUploadImageUrl())
+                    .build();
+
+            campRepository.save(camp);
+
+            return camp;
+        }
         Camp camp = Camp.builder()
-                .nickname(nickname)
+                    .nickname(nickname)
                 .title(requestDto.getTitle())
                 .location(requestDto.getLocation())
                 .review(requestDto.getReview())
                 .build();
-
-        campRepository.save(camp);
-
-        return camp;
+        return campRepository.save(camp);
     }
+//@Transactional
+//public Camp registerCamp(CampRequestDto requestDto) throws IOException {
+//    String nickname = getNickname();
+//        Camp camp = Camp.builder()
+//                .nickname(nickname)
+//                .title(requestDto.getTitle())
+//                .location(requestDto.getLocation())
+//                .review(requestDto.getReview())
+//                .build();
+//
+//        campRepository.save(camp);
+//
+//        return camp;
+//    }
     //S3 필요없는 곳
     public List<Camp> getCamps() {
 
@@ -119,9 +121,10 @@ public Camp registerCamp(CampRequestDto requestDto) throws IOException {
         if (!getNickname().equals(camp.getNickname())) {
             throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
         }
-//            DeletedUrlPath deletedUrlPath = new DeletedUrlPath();
-//            deletedUrlPath.setDeletedUrlPath(camp.getUrlPath());
-//            deletedUrlPathRepository.save(deletedUrlPath);
+            DeletedUrlPath deletedUrlPath = new DeletedUrlPath();
+            deletedUrlPath.setDeletedUrlPath(camp.getUrlPath());
+            deletedUrlPathRepository.save(deletedUrlPath);
+//            removeS3Image();
 
         campRepository.deleteById(campid);
         return true;

@@ -115,4 +115,8 @@ public class AuthService {
         }
         return true;
     }
+//    public void logout(String accessToken, String refreshToken) {
+//        redisUtil.setBlackList(accessToken, "accessToken", 1800);
+//        redisUtil.setBlackList(refreshToken, "refreshToken", 60400);
+//    }
 }
