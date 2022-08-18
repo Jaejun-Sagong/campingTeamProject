@@ -22,8 +22,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "*", allowedHeaders = "*")
-
+@CrossOrigin(origins = "*", exposedHeaders = "*", allowedHeaders = "*")
 @RestController // MemoController도 어딘가에서 쓰일 때 new MemoController 이렇게 해서 생성이 되고 사용되어야 하는데 이 어노테이션으로 그 작업을 생략하게 해줌
 public class CampController {  //생성 조회 변경 삭제가 필요한데 업데이트 -> service , 나머지 ->Repo가 필요함
 
