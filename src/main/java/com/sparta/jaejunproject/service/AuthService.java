@@ -30,10 +30,10 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-//        if(!(Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getNickname()) && (memberRequestDto.getNickname().length() > 3 && memberRequestDto.getNickname().length() <13)
-//        && Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getPassword()) && (memberRequestDto.getPassword().length() > 3 && memberRequestDto.getPassword().length() <33))){
-//            throw new IllegalArgumentException("닉네임 혹은 비밀번호 조건을 확인해주세요.");
-//        }
+        if(!(Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getNickname()) && (memberRequestDto.getNickname().length() > 3 && memberRequestDto.getNickname().length() <13)
+        && Pattern.matches("[a-zA-Z0-9]*$",memberRequestDto.getPassword()) && (memberRequestDto.getPassword().length() > 3 && memberRequestDto.getPassword().length() <33))){
+            throw new IllegalArgumentException("닉네임 혹은 비밀번호 조건을 확인해주세요.");
+        }
 //
 //        if (!memberRequestDto.getPassword().equals(memberRequestDto.getPasswordConfirm()))
 //            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다.");

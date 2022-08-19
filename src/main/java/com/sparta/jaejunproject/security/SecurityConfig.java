@@ -43,24 +43,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // CSRF 설정 Disable
         http.csrf().disable()
 
-                // 필터에서 처리되는 인증,인가 예외처리를 위해 우리가 만든 class 설정
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
-                // h2-console을 위한 설정
                 .and()
                 .headers()
                 .frameOptions()
                 .sameOrigin()
 
-                // 시큐리티는 기본적으로 세션을 사용
-                // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-                // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
                 .and()
                 .authorizeRequests()
 //                .mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CORS설정 관련 security 열어주기
@@ -68,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/camp/**").permitAll()
                 .antMatchers("/api/campDto/**").permitAll()
                 .antMatchers("/api/comment/**").permitAll()
-//                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
                 .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
